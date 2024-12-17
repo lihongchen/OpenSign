@@ -1101,7 +1101,7 @@ export const addInitialData = (signerPos, setXyPostion, value, userId) => {
 export const embedDocId = async (pdfDoc, documentId, allPages) => {
   // `fontBytes` is used to embed custom font in pdf
   const fontBytes = await fileasbytes(
-    "https://cdn.opensignlabs.com/webfonts/times.ttf"
+    "/times.ttf"
   );
   pdfDoc.registerFontkit(fontkit);
   const font = await pdfDoc.embedFont(fontBytes, { subset: true });
@@ -1325,7 +1325,7 @@ const getWidgetsFontColor = (type) => {
 export const multiSignEmbed = async (widgets, pdfDoc, signyourself, scale) => {
   // `fontBytes` is used to embed custom font in pdf
   const fontBytes = await fileasbytes(
-    "https://cdn.opensignlabs.com/webfonts/times.ttf"
+    "/times.ttf"
   );
   pdfDoc.registerFontkit(fontkit);
   const font = await pdfDoc.embedFont(fontBytes, { subset: true });

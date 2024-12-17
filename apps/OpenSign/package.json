@@ -59,7 +59,7 @@
   },
   "scripts": {
     "build-webpack": "webpack --config webpack.config.js",
-    "build": "npm run version && npm run build-webpack && react-scripts build",
+    "build": "npm run build-webpack && react-scripts build",
     "build-watch": "webpack --config webpack.config.js --watch",
     "start-dev": "react-scripts start",
     "start": "serve -s build",

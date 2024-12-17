@@ -1,25 +1,23 @@
-# Use an official Node runtime as the base image
-FROM node:18
+# 构建阶段
+FROM node:22 AS build
 
-# Set the working directory inside the container
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package.json and package-lock.json first to leverage Docker cache
-COPY ./package*.json ./
-
-# Install application dependencies
+COPY package.json package-lock.json ./
+RUN npm config set -g registry http://registry.npmmirror.com
 RUN npm install
+COPY . .
+RUN npm run build
+# 使用 Caddy 作为静态文件服务器
+FROM caddy:alpine
 
-# Copy the current directory contents into the container
-COPY ./ .
-COPY ./.husky .
+# 复制构建的静态文件到 /srv
+COPY --from=build /app/build /srv
 
-# Make port 3000 available to the world outside this container
-EXPOSE 3000
+# 配置 Caddyfile
+COPY Caddyfile /etc/caddy/Caddyfile
 
-# Define environment variables if needed
-# ENV NODE_ENV production
+EXPOSE 80
+EXPOSE 443
 
-# Run the application
-ENTRYPOINT npm run start
-
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

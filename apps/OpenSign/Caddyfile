@@ -1,0 +1,14 @@
+:3000 {
+    root * /srv
+    file_server
+    
+    handle_path /app/* {
+        reverse_proxy server:8080
+            rewrite * /app{uri}
+    }
+    
+    # 将未匹配的路径重定向到 index.html（适用于 React Router）
+    try_files {path} /index.html
+
+}
+
