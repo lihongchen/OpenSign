@@ -25,3 +25,13 @@ yarn-error.log*
 apps/OpenSign/public/mfbuild/*
 microfrontends/SignDocuments/build/*
 apps/OpenSignServer/files/files/*
+.idea/.gitignore
+.idea/misc.xml
+.idea/modules.xml
+.idea/OpenSign.iml
+.idea/prettier.xml
+.idea/vcs.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml
+.idea/inspectionProfiles/Project_Default.xml
+apps/OpenSignServer/exports/certificate.pdf
