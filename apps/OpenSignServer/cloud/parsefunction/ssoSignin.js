@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { cloudServerUrl } from '../../Utils.js';
+import { jwtDecode } from "jwt-decode";
 
 const serverUrl = cloudServerUrl; //process.env.SERVER_URL;
 const APPID = process.env.APP_ID;
@@ -15,42 +16,47 @@ const ssoApiUrl = process.env.SSO_API_URL || 'https://sso.opensignlabs.com/api';
 
 export default async function ssoSignin(request) {
   const code = request.params.code;
-  const userEmail = request.params.email;
+  const code_verifier = request.params.code_verifier;
+  let userEmail = request.params.email;
   try {
     const headers = { 'content-type': 'application/x-www-form-urlencoded' };
     const axiosRes = await axios.post(
-      ssoApiUrl + '/oauth/token',
+      ssoApiUrl + '/oauth2/token',
       {
         grant_type: 'authorization_code',
-        client_id: 'dummy',
-        tenant: 'Okta-dev-nxglabs-in',
-        product: 'OpenSign',
-        client_secret: 'dummy',
-        redirect_uri: clientUrl + '/sso',
+        client_id: '6bc25e50-e235-4c27-83cb-83fa0e63368a',
+        client_secret: 'fqWzysk3SZ6b45bwFy1rJ2DKVwv5nppNmSQ',
+        redirect_uri: 'http://localhost:3000/sso',
         code: code,
+        code_verifier: code_verifier,
       },
       { headers: headers }
     );
     const ssoAccessToken = axiosRes.data && axiosRes.data.access_token;
+    //从 id_token 中获取用户信息
+    const decodedToken = jwtDecode(axiosRes.data.id_token);
+    userEmail = decodedToken.email
     const authData = { sso: { id: userEmail, access_token: ssoAccessToken } };
     const userQuery = new Parse.Query(Parse.User);
     userQuery.equalTo('username', userEmail);
     const res = await userQuery.first({ useMasterKey: true });
     if (res) {
       try {
+        console.log(serverUrl + '/users/' + res.id)
         const SignIn = await axios.put(
-          serverUrl + '/users/' + res.id,
+          serverUrl + "/users/JXVr6vaOTs",
           { authData: authData },
           {
             headers: {
               'X-Parse-Application-Id': APPID,
               'X-Parse-Master-key': masterKEY,
+              'Content-Type': 'application/json',
             },
           }
         );
 
         if (SignIn.data) {
-          const response = await axios.get(ssoApiUrl + '/oauth/userinfo', {
+          const response = await axios.get(ssoApiUrl + '/userinfo', {
             headers: {
               Authorization: `Bearer ${ssoAccessToken}`,
             },
@@ -59,7 +65,7 @@ export default async function ssoSignin(request) {
           //   console.log('sso sessiontoken', sessiontoken);
           const payload = {
             email: userEmail,
-            name: response.data?.firstName + ' ' + response.data?.lastName,
+            name: response.data?.preferred_username ,
             phone: response?.data?.phone || '',
             message: 'User Sign In',
             sessiontoken: sessiontoken,
@@ -78,7 +84,7 @@ export default async function ssoSignin(request) {
       }
     } else {
       // console.log("in sign up condition");
-      const response = await axios.get(ssoApiUrl + '/oauth/userinfo', {
+      const response = await axios.get(ssoApiUrl + '/oauth2/userinfo', {
         headers: {
           Authorization: `Bearer ${ssoAccessToken}`,
         },

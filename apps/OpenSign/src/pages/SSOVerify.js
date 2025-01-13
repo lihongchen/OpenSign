@@ -9,6 +9,7 @@ import { showTenant } from "../redux/reducers/ShowTenant";
 import ModalUi from "../primitives/ModalUi";
 import Loader from "../primitives/Loader";
 import { useTranslation } from "react-i18next";
+import oidcClient from './oidcClient';
 
 const SSOVerify = () => {
   const { t } = useTranslation();
@@ -30,17 +31,38 @@ const SSOVerify = () => {
     linkUserWithSSO();
     // eslint-disable-next-line
   }, []);
-
+  async function getCodeVerifier() {
+    const param = new URLSearchParams(location.search);
+    const state = param?.get("state");
+    try {
+      // 读取 stateStore 中的状态
+      const stateValue = await oidcClient.settings.stateStore.get(state);
+      if (stateValue) {
+        const parsedState = JSON.parse(stateValue);
+        console.log("code_verifier:", parsedState.code_verifier);
+        return parsedState.code_verifier;
+      } else {
+        console.log("State not found in stateStore");
+        return null;
+      }
+    } catch (err) {
+      console.error("Error reading stateStore:", err);
+      return null;
+    }
+  }
   // `linkUserWithSSO` is used to sign in or sign up a user using an SSO code and check if the user is present in the extended class
   const linkUserWithSSO = async () => {
     const param = new URLSearchParams(location.search);
     const code = param?.get("code");
     const state = param?.get("state");
+    const code_verifier = await getCodeVerifier();
+    console.log("code_verifier", code_verifier)
     try {
       // The `ssosign` cloud function is used to sign in or sign up a user
       const ssosign = await Parse.Cloud.run("ssosign", {
         code: code,
-        email: state
+        email: state,
+        code_verifier:code_verifier
       });
       localStorage.setItem("accesstoken", ssosign.sessiontoken);
       // `checkExtUser` checks if the user is present in the extended class `contracts_Users` and if not, initiates the new user flow
@@ -65,8 +87,8 @@ const SSOVerify = () => {
           const LocalUserDetails = {
             name: extRes.Name,
             email: extRes.email,
-            phone: extRes?.get("Phone") || "",
-            company: extRes.get("Company")
+            phone: extRes?.Phone || "",
+            company: extRes.Company
           };
           localStorage.setItem("userDetails", JSON.stringify(LocalUserDetails));
           thirdpartyLoginfn(ssosign.sessiontoken);

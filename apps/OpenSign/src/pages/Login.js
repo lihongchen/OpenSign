@@ -23,6 +23,7 @@ import {
 import Loader from "../primitives/Loader";
 import { useTranslation } from "react-i18next";
 import SelectLanguage from "../components/pdf/SelectLanguage";
+import oidcClient from './oidcClient';
 
 function Login() {
   const { t, i18n } = useTranslation();
@@ -613,20 +614,16 @@ function Login() {
   // `handleSignInWithSSO` is trigger when user click sign in with sso and open sso authorize endpoint
   const handleSignInWithSSO = () => {
     if (isLoginSSO === false) {
-      if (state?.email) {
+      // if (state?.email) {
         setIsLoginSSO(true);
         const encodedEmail = encodeURIComponent(state.email);
         const clientUrl = window.location.origin;
         const domain = state.email.split("@")?.pop();
-        const ssoApiUrl =
-          process.env.SSO_API_URL || "https://sso.opensignlabs.com/api";
-        openInNewTab(
-          `${ssoApiUrl}/oauth/authorize?response_type=code&provider=saml&tenant=${domain}&product=OpenSign&redirect_uri=${clientUrl}/sso&state=${encodedEmail}`,
-          "_self"
-        );
-      } else {
-        alert(t("provide-email"));
-      }
+        const ssoApiUrl = process.env.SSO_API_URL || "http://192.168.2.70:9080/hydra-public";
+        oidcClient.signinRedirect(); // 重定向到 Hydra 的登录页面
+      // } else {
+      //   alert(t("provide-email"));
+      // }
     }
   };
 
