@@ -6,12 +6,13 @@ export const SSOAuth = {
   // Returns a promise that fulfills if this user mail is valid.
   validateAuthData: async authData => {
     try {
-      const response = await axios.get(ssoApiUrl + '/oauth/userinfo', {
+      const response = await axios.get(ssoApiUrl + '/userinfo', {
         headers: {
           Authorization: `Bearer ${authData.access_token}`,
         },
       });
-      if (response.data && response.data.id && response.data.email === authData.id) {
+      console.log('response.data', response.data);
+      if (response.data && response.data.sub && response.data.email === authData.id) {
         return;
       }
       throw new Parse.Error(Parse.Error.OBJECT_NOT_FOUND, 'SSO auth is invalid for this user.');
