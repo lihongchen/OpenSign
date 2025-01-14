@@ -69,6 +69,8 @@ export default async function ssoSignin(request) {
             phone: response?.data?.phone || '',
             message: 'User Sign In',
             sessiontoken: sessiontoken,
+            access_token: axiosRes.data.access_token,
+            id_token: axiosRes.data.id_token,
           };
           return payload;
         }
@@ -89,7 +91,8 @@ export default async function ssoSignin(request) {
           Authorization: `Bearer ${ssoAccessToken}`,
         },
       });
-      if (response.data && response.data.id) {
+      console.log('response.data', response.data)
+      if (response.data && response.data.sub) {
         try {
           const SignUp = await axios.post(
             serverUrl + '/users',
@@ -115,6 +118,8 @@ export default async function ssoSignin(request) {
               phone: SignUp?.data?.phone || '',
               message: 'User Sign Up',
               sessiontoken: sessiontoken,
+              access_token: axiosRes.data.access_token,
+              id_token: axiosRes.data.id_token,
             };
             return payload;
           }

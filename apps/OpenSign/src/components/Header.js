@@ -16,7 +16,7 @@ import { validplan } from "../json/plansArr";
 import { useTranslation } from "react-i18next";
 import ModalUi from "../primitives/ModalUi";
 import QuotaCard from "../primitives/QuotaCard";
-
+import   oidcClient from "./../pages/oidcClient"
 const Header = ({ showSidebar, setIsMenu }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ const Header = ({ showSidebar, setIsMenu }) => {
     let PageLanding = localStorage.getItem("PageLanding");
     let baseUrl = localStorage.getItem("baseUrl");
     let appid = localStorage.getItem("parseAppId");
-
+    let id_token = localStorage.getItem("id_token");
     localStorage.clear();
     saveLanguageInLocal(i18n);
     localStorage.setItem("appLogo", applogo);
@@ -110,6 +110,7 @@ const Header = ({ showSidebar, setIsMenu }) => {
     localStorage.setItem("baseUrl", baseUrl);
     localStorage.setItem("parseAppId", appid);
 
+    await oidcClient.signoutRedirect({id_token_hint: id_token});
     navigate("/");
   };
 
@@ -300,7 +301,7 @@ const Header = ({ showSidebar, setIsMenu }) => {
               <li onClick={closeDropdown}>
                 <span>
                   <i className="fa-light fa-arrow-right-from-bracket"></i>{" "}
-                  {t("log-out")}
+                  {t("log-out")}11
                 </span>
               </li>
             </ul>

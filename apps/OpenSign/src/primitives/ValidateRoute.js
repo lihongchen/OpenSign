@@ -3,6 +3,7 @@ import Parse from "parse";
 import { Outlet } from "react-router-dom";
 import { saveLanguageInLocal } from "../constant/Utils";
 import { useTranslation } from "react-i18next";
+import oidcClient from "./../pages/oidcClient"
 const ValidateRoute = () => {
   const { i18n } = useTranslation();
   useEffect(() => {
@@ -21,6 +22,10 @@ const ValidateRoute = () => {
           console.log("err in validate route", error);
           handlelogout();
         }
+      }else{
+        // if no token found then redirect to login page
+        console.log("用户没有登录重新登陆")
+        oidcClient.signinRedirect();
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,6 +47,8 @@ const ValidateRoute = () => {
     localStorage.setItem("userSettings", appdata);
     localStorage.setItem("baseUrl", baseUrl);
     localStorage.setItem("parseAppId", appid);
+    console.log("用户没有登录重新登陆")
+    oidcClient.signinRedirect();
   };
   return <div>{<Outlet />}</div>;
 };

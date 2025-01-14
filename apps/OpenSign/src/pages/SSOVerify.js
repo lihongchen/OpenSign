@@ -65,6 +65,8 @@ const SSOVerify = () => {
         code_verifier:code_verifier
       });
       localStorage.setItem("accesstoken", ssosign.sessiontoken);
+      localStorage.setItem("access_token", ssosign.access_token);
+      localStorage.setItem("id_token", ssosign.id_token);
       // `checkExtUser` checks if the user is present in the extended class `contracts_Users` and if not, initiates the new user flow
       await checkExtUser(ssosign);
     } catch (err) {
