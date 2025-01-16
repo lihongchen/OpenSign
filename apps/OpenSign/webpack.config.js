@@ -8,6 +8,7 @@ module.exports = {
   mode: isProduction ? "production" : "development",
   entry: "./src/script/PublicTemplate.js",
   output: {
+    publicPath: '/opensign/',
     path: path.resolve(__dirname, "public/static/js"),
     filename: "public-template.bundle.js",
     libraryTarget: "umd",

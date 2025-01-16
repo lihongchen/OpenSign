@@ -70,7 +70,7 @@ function App() {
       {isloading ? (
         <AppLoader />
       ) : (
-        <BrowserRouter>
+        <BrowserRouter basename="/opensign">
           <Routes>
             <Route element={<ValidateRoute />}>
               <Route exact path="/" element={<Login />} />

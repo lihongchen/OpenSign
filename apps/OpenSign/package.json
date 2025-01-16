@@ -2,6 +2,7 @@
   "name": "open_sign",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/opensign",
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
     "@lottiefiles/dotlottie-react": "^0.10.0",

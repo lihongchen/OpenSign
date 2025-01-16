@@ -152,7 +152,12 @@ function PdfRequestFiles(props) {
   let sendmail;
   let getDocId = "";
   let contactBookId = "";
-  const route = !props.templateId && window.location.pathname;
+  let route = !props.templateId && window.location.pathname;
+  //TODO 由于添加前缀 /opensign 路由，所以需要去掉
+  if (route && route.includes("/opensign")) {
+    route = route.replace("/opensign", "");
+  }
+
   const getQuery = !props.templateId && window.location?.search?.split("?"); //['','sendmail=false']
   if (getQuery) {
     sendmail = getQuery?.[1]?.split("=")[1]; //false

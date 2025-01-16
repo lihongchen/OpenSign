@@ -1060,7 +1060,9 @@ function PlaceHolderSign() {
     let signerMail = signersdata;
     for (let i = 0; i < signerMail.length; i++) {
       const objectId = signerMail[i].objectId;
-      const hostUrl = window.location.origin;
+      let hostUrl = window.location.origin;
+      //TODO 添加前缀 /opensign
+      hostUrl = hostUrl+"/opensign"
       const sendMail = false;
       //encode this url value `${pdfDetails?.[0].objectId}/${signerMail[i].Email}/${objectId}` to base64 using `btoa` function
       const encodeBase64 = btoa(

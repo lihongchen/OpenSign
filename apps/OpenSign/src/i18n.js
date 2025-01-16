@@ -9,7 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     backend: {
-      loadPath: "/locales/{{lng}}/{{ns}}.json"
+      loadPath: "/opensign/locales/{{lng}}/{{ns}}.json"
     },
     fallbackLng: "en", // Fallback to English if no other language is detected
     detection: {
