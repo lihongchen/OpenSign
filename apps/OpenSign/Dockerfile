@@ -10,4 +10,4 @@ COPY . .
 EXPOSE 3000
 
 # Run the application
-ENTRYPOINT npm start
+ENTRYPOINT npm run  start-dev
