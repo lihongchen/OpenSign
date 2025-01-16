@@ -24,9 +24,9 @@ export default async function ssoSignin(request) {
       ssoApiUrl + '/oauth2/token',
       {
         grant_type: 'authorization_code',
-        client_id: '6bc25e50-e235-4c27-83cb-83fa0e63368a',
-        client_secret: 'fqWzysk3SZ6b45bwFy1rJ2DKVwv5nppNmSQ',
-        redirect_uri: 'http://localhost:3000/opensign/sso',
+        client_id: process.env.SSO_CLIENT_ID || '6bc25e50-e235-4c27-83cb-83fa0e63368a',
+        client_secret: process.env.SSO_CLIENT_SECRET ||'fqWzysk3SZ6b45bwFy1rJ2DKVwv5nppNmSQ',
+        redirect_uri: process.env.SSO_REDIRECT_URI  || 'http://localhost:3000/opensign/sso',
         code: code,
         code_verifier: code_verifier,
       },
