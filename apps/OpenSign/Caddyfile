@@ -1,9 +1,9 @@
 :3000 {
-    root * /srv
+    root * ./build
     file_server
     
     handle_path /app/* {
-        reverse_proxy server:8080
+        reverse_proxy localhost:8080
             rewrite * /app{uri}
     }
     
